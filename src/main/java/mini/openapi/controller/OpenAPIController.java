@@ -1,5 +1,9 @@
 package mini.openapi.controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +45,15 @@ public class OpenAPIController {
             }
             rd.close();
             conn.disconnect();
-            System.out.println(sb.toString());
-            return sb.toString();
+            JsonElement element = JsonParser.parseString(sb.toString());
+            JsonObject responseObject = element.getAsJsonObject().get("response").getAsJsonObject();
+            JsonObject bodyObject = responseObject.get("body").getAsJsonObject();
+            JsonObject itemsObject = bodyObject.get("items").getAsJsonObject();
+            JsonArray itemArray = itemsObject.get("item").getAsJsonArray();
+            JsonObject item = itemArray.get(0).getAsJsonObject();
+            String data = item.get("wfSv").getAsString();
+            System.out.println(data);
+            return data;
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
