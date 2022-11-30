@@ -103,12 +103,12 @@ public class OpenAPIController {
     public String energy() {
         try {
             String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
-            StringBuilder urlBuilder = new StringBuilder("https://infuser.odcloud.kr/oas/docs?namespace=15003783/v1/uddi:ac80e431-36c8-4012-a27b-c4dad8f6a7a5_201505281940"); /*URL*/
+            StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552070/oamsFile2/callOamsFile2"); /*URL*/
 
             urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey); /*Service Key*/
-            urlBuilder.append("&" + URLEncoder.encode("page", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("perPage", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
-            urlBuilder.append("&" + URLEncoder.encode("returnType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("apiType", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
             URL url = new URL(urlBuilder.toString());
             System.out.println(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
