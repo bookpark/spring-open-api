@@ -16,11 +16,12 @@ import java.net.URLEncoder;
 @RestController
 public class OpenAPIController {
 
-    final String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
+//    final String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
 
     @GetMapping("/api/weather")
     public String weather() {
         try {
+            String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
             StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/1360000/MidFcstInfoService/getMidFcst"); /*URL*/
             urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey); /*Service Key*/
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
@@ -64,13 +65,14 @@ public class OpenAPIController {
     @GetMapping("/api/stock")
     public String stock() {
         StringBuilder urlBuilder = new StringBuilder(
-                "https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService"
+                "http://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo"
         );
         try {
-            urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey); /*Service Key*/
+            String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
+            urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey);
             urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지번호*/
             urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); /*한 페이지 결과 수*/
-            urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("resultType", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
 
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -97,5 +99,39 @@ public class OpenAPIController {
         }
     }
 
+    @GetMapping("/api/energy")
+    public String energy() {
+        try {
+            String serviceKey = "R6f1Dk8rd%2FXqp0BREWtNhJxXEnNnkhhkae%2FlK8ZMBqCwP2PxOLczhCcxDupBB4Vf96JwjjjATYybZ3c6uXRr8Q%3D%3D";
+            StringBuilder urlBuilder = new StringBuilder("https://infuser.odcloud.kr/oas/docs?namespace=15003783/v1/uddi:ac80e431-36c8-4012-a27b-c4dad8f6a7a5_201505281940"); /*URL*/
 
+            urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + serviceKey); /*Service Key*/
+            urlBuilder.append("&" + URLEncoder.encode("page", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("perPage", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("returnType", "UTF-8") + "=" + URLEncoder.encode("JSON", "UTF-8"));
+            URL url = new URL(urlBuilder.toString());
+            System.out.println(urlBuilder.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            System.out.println("Response code: " + conn.getResponseCode());
+            BufferedReader rd;
+            if (conn.getResponseCode() == 200) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
 }
